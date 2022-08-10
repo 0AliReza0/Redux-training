@@ -4,7 +4,7 @@ import {
     createSelector,
     createEntityAdapter
 } from "@reduxjs/toolkit";
-import { sub } from 'date-fns';
+import {sub} from 'date-fns';
 import axios from "axios";
 
 const POSTS_URL = 'https://jsonplaceholder.typicode.com/posts';
@@ -41,7 +41,7 @@ export const addNewPost = createAsyncThunk('posts/addNewPost', async (initialPos
 })
 
 export const updatePost = createAsyncThunk('posts/updatePost', async (initialPost) => {
-    const { id } = initialPost
+    const {id} = initialPost
     try {
         const response = await axios.put(`${POSTS_URL}/${id}`, initialPost)
         return response.data
@@ -52,7 +52,7 @@ export const updatePost = createAsyncThunk('posts/updatePost', async (initialPos
 })
 
 export const deletePost = createAsyncThunk('posts/deletePost', async (initialPost) => {
-    const { id } = initialPost
+    const {id} = initialPost
     try {
         const response = await axios.delete(`${POSTS_URL}/${id}`)
         if (response?.status === 200) return initialPost
@@ -67,7 +67,7 @@ const postsSlice = createSlice({
     initialState,
     reducers: {
         reactionAdded(state, action) {
-            const { postId, reaction } = action.payload
+            const {postId, reaction} = action.payload
             const existingPost = state.entities[postId]
             if (existingPost) {
                 existingPost.reactions[reaction]++
@@ -87,7 +87,7 @@ const postsSlice = createSlice({
                 // Adding date and reactions
                 let min = 1;
                 const loadedPosts = action.payload.map(post => {
-                    post.date = sub(new Date(), { minutes: min++ }).toISOString();
+                    post.date = sub(new Date(), {minutes: min++}).toISOString();
                     post.reactions = {
                         thumbsUp: 0,
                         wow: 0,
@@ -131,7 +131,7 @@ const postsSlice = createSlice({
                     console.log(action.payload);
                     return
                 }
-                const { id } = action.payload
+                const {id} = action.payload
                 postsAdapter.removeOne(state, id)
             })
     }
@@ -142,7 +142,7 @@ export const {
     selectAll: selectAllPosts,
     selectById: selectPostById,
     selectIds: selectPostIds,
-    selectTotal:selectTotalPosts
+    selectTotal: selectTotalPosts
     // Pass in a selector that returns the posts slice of state
 } = postsAdapter.getSelectors(state => state.posts)
 
@@ -155,6 +155,6 @@ export const selectPostByUser = createSelector(
     (posts, userId) => posts.filter(post => post.userId === userId)
 )
 
-export const { increaseCount, reactionAdded } = postsSlice.actions
+export const {increaseCount, reactionAdded} = postsSlice.actions
 
 export default postsSlice.reducer
